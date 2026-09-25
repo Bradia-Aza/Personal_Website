@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/*
+ * Design system — "Quiet Manuscript" (Direction C), locked in Phase 1.3.
+ * Values extracted from app/design-preview/c/page.tsx, the approved preview.
+ * This is the single source of styling truth: don't redecide type scale,
+ * spacing, or color per page — reuse these tokens.
+ */
+:root {
+  /* Color */
+  --bg: #fbfaf8;
+  --ink: #1c1b19;
+  --ink-soft: #6f6a63;
+  --line: #e4e0d8;
+  --accent: #4a5b8c;
+
+  /* Type families — Georgia serif for display/headline type, system sans
+     for nav/labels/small-caps text. */
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+
+  /* Type scale, as used in the preview */
+  --text-label: 12px; /* uppercase nav, index marks, section labels, meta */
+  --text-meta: 14px; /* row titles' companion text, link text */
+  --text-body: 18px; /* lede / intro paragraph */
+  --text-row-title: 21px; /* index row titles */
+  --text-wordmark: 18px;
+  --text-h1: 52px;
+  --text-h1-mobile: 36px;
+
+  /* Spacing scale, as used in the preview */
+  --space-xs: 8px;
+  --space-sm: 24px;
+  --space-md: 28px;
+  --space-lg: 40px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: 72px;
+  --space-4xl: 96px;
+
+  --shell-max-width: 900px;
+  --shell-padding: 40px;
+
+  /* Small structural values reused as-is across cards, tags, and buttons. */
+  --radius-sm: 2px;
+  --chip-padding: 4px 10px;
+  --button-padding: 6px 12px;
+  --accent-tint: rgba(74, 91, 140, 0.06); /* --accent at 6% alpha */
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+}
+
+/* Direction C is a fixed light palette — no prefers-color-scheme switch
+   was part of the approved preview, so none is added here. */
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}

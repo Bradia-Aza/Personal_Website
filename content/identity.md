@@ -1,6 +1,6 @@
 ---
 name: Bardia Azami
-location: Ottawa, Canada
+Location: Canada
 email: bard.azami@gmail.com
 github: https://github.com/Bradia-Aza
 linkedin: https://www.linkedin.com/in/bardia-azami-a24579258/

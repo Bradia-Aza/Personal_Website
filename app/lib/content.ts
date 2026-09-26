@@ -74,28 +74,26 @@ function strList(data: Record<string, string | string[]>, key: string): string[]
   return Array.isArray(value) ? value : [];
 }
 
-// Splits a project/research body of repeating "## Problem / ## Solution /
-// ## Result" sections into structured triples, in source order.
-function parseProblemSolutionResult(body: string) {
-  const firstHeadingIndex = body.search(/\r?\n##\s+/);
-  const lede = (firstHeadingIndex === -1 ? body : body.slice(0, firstHeadingIndex)).trim();
-  const rest = firstHeadingIndex === -1 ? "" : body.slice(firstHeadingIndex);
-  const headed = rest
-    .split(/\r?\n##\s+/)
+// A project/research body is prose: a run of paragraphs with the occasional
+// heading line (any number of leading #s) breaking it into subsections.
+// Not a general Markdown renderer — no inline emphasis, links, or lists are
+// in use in these files today, so none are supported here (STRUCTURE.md §3,
+// CLAUDE.md rule 1).
+export type BodyBlock =
+  | { type: "heading"; text: string }
+  | { type: "paragraph"; text: string };
+
+function parseBody(body: string): BodyBlock[] {
+  return body
+    .split(/\r?\n\s*\r?\n/)
     .map((s) => s.trim())
-    .filter(Boolean);
-
-  const details: { problem: string; solution: string; result: string }[] = [];
-  for (let i = 0; i < headed.length; i += 3) {
-    const problem = headed[i]?.replace(/^Problem\r?\n/, "").trim() ?? "";
-    const solution = headed[i + 1]?.replace(/^Solution\r?\n/, "").trim() ?? "";
-    const result = headed[i + 2]?.replace(/^Result\r?\n/, "").trim() ?? "";
-    if (problem || solution || result) {
-      details.push({ problem, solution, result });
-    }
-  }
-
-  return { lede, details };
+    .filter(Boolean)
+    .map((chunk): BodyBlock => {
+      const headingMatch = chunk.match(/^#{1,6}\s+(.*)$/);
+      return headingMatch
+        ? { type: "heading", text: headingMatch[1].trim() }
+        : { type: "paragraph", text: chunk };
+    });
 }
 
 export type Identity = {
@@ -174,7 +172,7 @@ export type Project = {
   summary: string;
   outcome: string;
   stack: string[];
-  details: { problem: string; solution: string; result: string }[];
+  body: BodyBlock[];
   keywords: string[];
 };
 
@@ -185,17 +183,20 @@ export function getProjects(): Project[] {
   const projects = files.map((file) => {
     const slug = file.replace(/\.md$/, "");
     const { data, body } = readMarkdownFile(path.join(dir, file));
-    const { lede, details } = parseProblemSolutionResult(body);
+    const blocks = parseBody(body);
+    // The opening paragraph doubles as the short summary shown on the
+    // portfolio index and used for the page's meta description.
+    const firstParagraph = blocks.find((b) => b.type === "paragraph");
 
     return {
       slug,
       title: str(data, "title"),
       dates: str(data, "dates"),
       featured: str(data, "featured") === "true",
-      summary: lede,
+      summary: firstParagraph?.text ?? "",
       outcome: str(data, "outcome"),
       stack: strList(data, "stack"),
-      details,
+      body: blocks,
       keywords: strList(data, "keywords"),
     };
   });

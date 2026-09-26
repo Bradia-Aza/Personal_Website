@@ -19,7 +19,7 @@
 | Email | bard.azami@gmail.com |
 | GitHub | https://github.com/Bradia-Aza |
 | LinkedIn | https://www.linkedin.com/in/bardia-azami-a24579258/ |
-| Location | Ottawa, Canada |
+| Location | Canada |
 
 ### Positioning statement
 

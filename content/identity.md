@@ -9,7 +9,7 @@ image: image.jpg
 
 ## Positioning statement
 
-Machine Learning Engineer with experience building and deploying end-to-end AI solutions. I specialize in creating production-ready pipelines for both generative-AI agents and predictive models, and I focus on translating complex business needs into clean, scalable code that drives data-driven decisions and delivers measurable impact.
+I build AI systems and enjoy understanding how they work under the hood. My background is in Machine Learning and computer vision, and I'm currently building LLM harnesses focused on making AI and agentic workflows more efficient and reliable.
 
 ## Story
 

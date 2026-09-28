@@ -71,7 +71,7 @@ export default function HomePage() {
               marginBottom: "var(--space-sm)",
             }}
           >
-            Best work
+            SELECTED WORK
           </p>
           <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
             {featured.map((project) => (
@@ -123,7 +123,7 @@ export default function HomePage() {
                 margin: 0,
               }}
             >
-              Hiring
+              What I've built
             </p>
             <p
               style={{

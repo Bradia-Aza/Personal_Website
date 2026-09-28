@@ -84,7 +84,7 @@ So, practically:
 
 With twenty seconds to work with, the top of the page needs exactly four things:
 your name and a one-line description of who you are; one or two sentences on what
-you want to work on *next*; two or three links to your best work; and a clear
+you want to work on *next*; two or three links to your Projects; and a clear
 split — "here for hiring, go this way / here for research, go that way."
 
 That last one sounds blunt. It works, and it quietly shows you understand who's

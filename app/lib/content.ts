@@ -212,8 +212,8 @@ export function getProjects(): Project[] {
   // Fixed display order (directory reads aren't guaranteed alphabetical
   // across platforms) — featured-first, matching REPORT.md's ordering.
   const order = [
-    "careerflow-ai",
     "datamind",
+    "careerflow-ai",
     "ww2-historical-rag-pipeline",
     "ottawa-rental-market-etl",
     "pistachio-dataset-analysis",

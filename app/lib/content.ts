@@ -214,11 +214,11 @@ export function getProjects(): Project[] {
   const order = [
     "datamind",
     "careerflow-ai",
-    "ww2-historical-rag-pipeline",
     "ottawa-rental-market-etl",
     "pistachio-dataset-analysis",
     "dallas-police-incident-analysis",
     "gesture-based-multimodal-robotic-control",
+    "ww2-historical-rag-pipeline",
   ];
   return projects.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug));
 }

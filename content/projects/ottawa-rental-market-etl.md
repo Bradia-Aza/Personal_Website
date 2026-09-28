@@ -1,7 +1,7 @@
 ---
 title: Ottawa Rental Market ETL & Analytics Pipeline
 dates: 2024
-featured: false
+featured: true
 outcome: Produced Days-on-Market metrics the source data never contained, from a daily collection feed against a site static scraping could not read at all.
 stack:
   - Python

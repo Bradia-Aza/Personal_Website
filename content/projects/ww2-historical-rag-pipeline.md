@@ -1,7 +1,7 @@
 ---
 title: WW2 Historical RAG Pipeline
 dates: 2024
-featured: true
+featured: false
 outcome: Deployed a web interface non-technical evaluators could use, with every answer traceable to its source passage and an explicit fallback when confidence was too low.
 stack:
   - Python

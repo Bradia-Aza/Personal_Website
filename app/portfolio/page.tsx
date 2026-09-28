@@ -6,7 +6,7 @@ import { getProjects } from "@/app/lib/content";
 export const metadata: Metadata = {
   title: "Portfolio",
   description:
-    "ML and LLM engineering projects by Bardia Azami, including CareerFlow AI, DataMind, and a WW2 historical RAG pipeline.",
+    "ML and LLM engineering projects by Bardia Azami, including CareerFlow AI, DataMind, and the Ottawa Rental Market ETL & Analytics Pipeline.",
 };
 
 // Portfolio index — three projects in depth, the rest listed briefly, per

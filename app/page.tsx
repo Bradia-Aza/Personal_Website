@@ -15,42 +15,52 @@ export default function HomePage() {
   return (
     <main>
       <Shell>
-        <section style={{ padding: `var(--space-3xl) 0 var(--space-2xl)` }}>
+        <section
+          style={{
+            padding: `var(--space-3xl) 0 var(--space-2xl)`,
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-lg)",
+            flexWrap: "wrap",
+          }}
+        >
           <Image
             src="/bardia.jpg"
             alt={identity.name}
-            width={160}
-            height={160}
+            width={180}
+            height={180}
             style={{
-              borderRadius: "var(--radius-sm)",
+              borderRadius: "50%",
               objectFit: "cover",
-              marginBottom: "var(--space-lg)",
+              flexShrink: 0,
             }}
           />
-          <h1
-            style={{
-              fontFamily: "var(--font-serif)",
-              fontWeight: 400,
-              fontSize: "var(--text-h1)",
-              lineHeight: 1.15,
-              margin: 0,
-              maxWidth: "16ch",
-            }}
-          >
-            {identity.name}
-          </h1>
-          <p
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "var(--text-body)",
-              color: "var(--ink-soft)",
-              maxWidth: "58ch",
-              marginTop: "var(--space-md)",
-              lineHeight: 1.55,
-            }}
-          >
-            {identity.positioning}
-          </p>
+          <div>
+            <h1
+              style={{
+                fontFamily: "var(--font-serif)",
+                fontWeight: 400,
+                fontSize: "var(--text-h1)",
+                lineHeight: 1.15,
+                margin: 0,
+                maxWidth: "14ch",
+              }}
+            >
+              {identity.name}
+            </h1>
+            <p
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "var(--text-body)",
+                color: "var(--ink-soft)",
+                maxWidth: "46ch",
+                marginTop: "var(--space-md)",
+                lineHeight: 1.55,
+              }}
+            >
+              {identity.positioning}
+            </p>
+          </div>
         </section>
 
         <section style={{ paddingBottom: "var(--space-2xl)" }}>

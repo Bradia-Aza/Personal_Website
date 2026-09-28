@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Shell from "./components/Shell";
-import OwnerPlaceholder from "./components/OwnerPlaceholder";
-import { getIdentity, getProjects, getHomeTaglines } from "./lib/content";
+import { getIdentity, getProjects, getHomeTaglines, getHomeWorkStyle } from "./lib/content";
 
 // Home — a signpost, not a biography, per REPORT.md §2: name + one-line
 // identity, a sentence on what's next, links to the best work, and an
@@ -10,6 +9,7 @@ import { getIdentity, getProjects, getHomeTaglines } from "./lib/content";
 export default function HomePage() {
   const identity = getIdentity();
   const homeTaglines = getHomeTaglines();
+  const homeWorkStyle = getHomeWorkStyle();
   const featured = getProjects().filter((p) => p.featured);
 
   return (
@@ -64,12 +64,19 @@ export default function HomePage() {
               marginBottom: "var(--space-sm)",
             }}
           >
-            What&rsquo;s next
+            How I Like to Work
           </p>
-          <OwnerPlaceholder
-            label="research-interest statement"
-            note="This is the forward-looking sentence or two on what Bardia wants to work on next — not in BACKGROUND.md, and per CLAUDE.md rule 4 it isn't invented here. REPORT.md Part 4 Q1 notes this needs Bardia's own voice, ideally naming a specific question rather than a general interest area. Write this and it replaces this block, on both Home and Research."
-          />
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "var(--text-body)",
+              color: "var(--ink-soft)",
+              maxWidth: "58ch",
+              lineHeight: 1.55,
+            }}
+          >
+            {homeWorkStyle}
+          </p>
         </section>
 
         <section style={{ paddingBottom: "var(--space-2xl)" }}>

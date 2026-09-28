@@ -168,6 +168,13 @@ export function getHomeTaglines(): HomeTaglines {
   };
 }
 
+// "How I Like to Work" homepage section — plain prose body, no frontmatter
+// needed since it's a single block of text.
+export function getHomeWorkStyle(): string {
+  const { body } = readMarkdownFile(path.join(CONTENT_DIR, "home-work-style.md"));
+  return body;
+}
+
 export type Project = {
   slug: string;
   title: string;

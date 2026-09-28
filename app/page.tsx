@@ -90,7 +90,7 @@ export default function HomePage() {
               marginBottom: "var(--space-sm)",
             }}
           >
-            SELECTED WORK
+            Selected Projects
           </p>
           <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
             {featured.map((project) => (
@@ -185,7 +185,7 @@ export default function HomePage() {
                 margin: 0,
               }}
             >
-              Research
+              Professional Experience & Research
             </p>
             <p
               style={{

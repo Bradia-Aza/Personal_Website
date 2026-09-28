@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Shell from "@/app/components/Shell";
 import OwnerPlaceholder from "@/app/components/OwnerPlaceholder";
-import { getResearchEntries } from "@/app/lib/content";
+import { getResearchEntries, getResearchInterest } from "@/app/lib/content";
 
 export const metadata: Metadata = {
   title: "Research",
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 // REPORT.md describes for the no-thesis case.
 export default function ResearchPage() {
   const researchEntries = getResearchEntries();
+  const researchInterest = getResearchInterest();
 
   return (
     <main>
@@ -47,10 +48,24 @@ export default function ResearchPage() {
           >
             Where this is headed
           </p>
-          <OwnerPlaceholder
-            label="research-interest statement"
-            note="A statement of the specific question Bardia wants to pursue next — not in BACKGROUND.md, and REPORT.md flags that a general interest area ('I'm interested in foundation models') reads as filler compared to a specific question. Not invented here per CLAUDE.md rule 4; write this in Bardia's own voice and it replaces this block."
-          />
+          {researchInterest ? (
+            <p
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "var(--text-body)",
+                color: "var(--ink-soft)",
+                maxWidth: "68ch",
+                lineHeight: 1.55,
+              }}
+            >
+              {researchInterest}
+            </p>
+          ) : (
+            <OwnerPlaceholder
+              label="research-interest statement"
+              note="A statement of the specific question Bardia wants to pursue next — not in BACKGROUND.md, and REPORT.md flags that a general interest area ('I'm interested in foundation models') reads as filler compared to a specific question. Not invented here per CLAUDE.md rule 4; write this in Bardia's own voice and it replaces this block."
+            />
+          )}
         </section>
 
         <section style={{ paddingBottom: "var(--space-4xl)" }}>

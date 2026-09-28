@@ -74,16 +74,17 @@ The homepage's former "What's next" placeholder is now filled in: it's the
 read via `getHomeWorkStyle()` in `app/lib/content.ts`. That's a real content
 file now — edit it like any other.
 
-The Research page's "Where this is headed" section is still an "owner
-placeholder" block, on purpose. Per `CLAUDE.md` rule 4, the forward-looking
-research-direction statement isn't in `BACKGROUND.md`, so nothing was
-invented for it — it's backed by `content/research-interest.md`, which is
-still a placeholder file. It needs to be written in Bardia's own voice. Once
-written, set its `status` away from `placeholder` (or replace the
-`OwnerPlaceholder` usage in `app/research/page.tsx` with the file's body,
-matching how the homepage section above now reads `home-work-style.md`) —
-that's a small follow-up code change to wire up, not something this phase
-should guess at.
+The Research page's "Where this is headed" section is now filled in too:
+`content/research-interest.md`'s `status` is `final`, and `getResearchInterest()`
+in `app/lib/content.ts` reads its body onto the page. That's a real content
+file now — edit it like any other.
+
+The `OwnerPlaceholder` component and its usage in `app/research/page.tsx`
+are kept as a fallback: if `content/research-interest.md`'s `status` frontmatter
+key is ever set back to `placeholder` (or removed), the page falls back to
+rendering that block instead of blank/stale text. Setting `status: final` is
+what makes new edits to the file appear on the page — a plain content edit
+from here on, no code change needed.
 
 ## Where the loader lives
 

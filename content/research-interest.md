@@ -1,5 +1,5 @@
 ---
-status: placeholder
+status: final
 label: research-interest statement
 ---
 

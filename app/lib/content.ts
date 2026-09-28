@@ -175,6 +175,16 @@ export function getHomeWorkStyle(): string {
   return body;
 }
 
+// Research page's "Where this is headed" section. Returns null while the
+// file is still marked as a placeholder (per CLAUDE.md rule 4 — this is
+// Bardia's own forward-looking statement, not invented here), so the page
+// can fall back to OwnerPlaceholder until status flips away from that.
+export function getResearchInterest(): string | null {
+  const { data, body } = readMarkdownFile(path.join(CONTENT_DIR, "research-interest.md"));
+  if (str(data, "status") === "placeholder") return null;
+  return body;
+}
+
 export type Project = {
   slug: string;
   title: string;

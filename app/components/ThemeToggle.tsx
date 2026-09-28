@@ -1,21 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // Manual light/dark switch for Night Reading (see globals.css). The initial
 // theme itself is set synchronously by the inline script in layout.tsx to
-// avoid a flash; this component only needs to reflect and toggle it after
-// hydration.
-export default function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+// avoid a flash; this component reads that same DOM state synchronously via
+// the useState initializer (not an effect) so the button's own label doesn't
+// briefly show the wrong state on a dark-themed load, before React re-runs
+// this initializer during hydration.
+function readInitialTheme(): "light" | "dark" {
+  if (typeof document === "undefined") return "light";
+  return document.documentElement.getAttribute("data-theme") === "dark"
+    ? "dark"
+    : "light";
+}
 
-  useEffect(() => {
-    setTheme(
-      document.documentElement.getAttribute("data-theme") === "dark"
-        ? "dark"
-        : "light",
-    );
-  }, []);
+export default function ThemeToggle() {
+  const [theme, setTheme] = useState<"light" | "dark">(readInitialTheme);
 
   function toggle() {
     const next = theme === "dark" ? "light" : "dark";

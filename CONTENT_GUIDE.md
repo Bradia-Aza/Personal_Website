@@ -69,15 +69,21 @@ copy (it starts with `_` so it's never picked up as a real post):
 
 ## What's intentionally not a content file
 
-Two short "owner placeholder" blocks — the homepage's "What's next" section
-and the Research page's "Where this is headed" section — are not filled in
-yet, on purpose. Per `CLAUDE.md` rule 4, the forward-looking research-
-direction statement isn't in `BACKGROUND.md`, so nothing was invented for
-it. It needs to be written in Bardia's own voice. Once written, add it as a
-new field (e.g. a `## Direction` section in `content/identity.md`, or its
-own `content/direction.md`) and it replaces the placeholder component on
-both pages — that's a small follow-up code change to wire up, not something
-this phase should guess at.
+The homepage's former "What's next" placeholder is now filled in: it's the
+"How I Like to Work" section, backed by `content/home-work-style.md` and
+read via `getHomeWorkStyle()` in `app/lib/content.ts`. That's a real content
+file now — edit it like any other.
+
+The Research page's "Where this is headed" section is still an "owner
+placeholder" block, on purpose. Per `CLAUDE.md` rule 4, the forward-looking
+research-direction statement isn't in `BACKGROUND.md`, so nothing was
+invented for it — it's backed by `content/research-interest.md`, which is
+still a placeholder file. It needs to be written in Bardia's own voice. Once
+written, set its `status` away from `placeholder` (or replace the
+`OwnerPlaceholder` usage in `app/research/page.tsx` with the file's body,
+matching how the homepage section above now reads `home-work-style.md`) —
+that's a small follow-up code change to wire up, not something this phase
+should guess at.
 
 ## Where the loader lives
 

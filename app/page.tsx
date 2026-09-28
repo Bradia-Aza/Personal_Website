@@ -35,7 +35,7 @@ export default function HomePage() {
               flexShrink: 0,
             }}
           />
-          <div>
+          <div style={{ minWidth: "220px" }}>
             <h1
               style={{
                 fontFamily: "var(--font-serif)",

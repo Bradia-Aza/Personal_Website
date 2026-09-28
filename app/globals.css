@@ -55,8 +55,21 @@
   --font-serif: var(--font-serif);
 }
 
-/* Direction C is a fixed light palette — no prefers-color-scheme switch
-   was part of the approved preview, so none is added here. */
+/*
+ * "Night Reading" — the approved dark variant of Quiet Manuscript. Same
+ * type scale, spacing, and structural tokens; only the color tokens change,
+ * relightened from the same accent hue family for contrast on a dark,
+ * warm (not cold/blue-black) background. Toggled via ThemeToggle.tsx, which
+ * sets data-theme on <html> and persists the choice to localStorage.
+ */
+:root[data-theme="dark"] {
+  --bg: #1a1815;
+  --ink: #e8e4dc;
+  --ink-soft: #9c9488;
+  --line: #332e28;
+  --accent: #93a8e0;
+  --accent-tint: rgba(147, 168, 224, 0.08);
+}
 
 body {
   background: var(--bg);

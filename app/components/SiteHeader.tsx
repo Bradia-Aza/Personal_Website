@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Shell from "./Shell";
+import ThemeToggle from "./ThemeToggle";
 import { getNav } from "@/app/lib/content";
 
 // Top bar on every page: wordmark, nav (Research before Portfolio per
@@ -67,6 +68,7 @@ export default function SiteHeader() {
             >
               CV
             </a>
+            <ThemeToggle />
           </nav>
         </div>
       </Shell>

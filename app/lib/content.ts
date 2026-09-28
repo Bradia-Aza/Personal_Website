@@ -104,6 +104,7 @@ export type Identity = {
   email: string;
   github: string;
   linkedin: string;
+  image: string;
   positioning: string;
   story: string;
   thread: string;
@@ -124,6 +125,7 @@ export function getIdentity(): Identity {
     email: str(data, "email"),
     github: str(data, "github"),
     linkedin: str(data, "linkedin"),
+    image: str(data, "image"),
     positioning: byHeading["positioning statement"] ?? byHeading["positioning"] ?? "",
     story: byHeading["story"] ?? "",
     thread: byHeading["thread"] ?? "",

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import Shell from "./components/Shell";
 import OwnerPlaceholder from "./components/OwnerPlaceholder";
@@ -15,6 +16,17 @@ export default function HomePage() {
     <main>
       <Shell>
         <section style={{ padding: `var(--space-3xl) 0 var(--space-2xl)` }}>
+          <Image
+            src="/bardia.jpg"
+            alt={identity.name}
+            width={160}
+            height={160}
+            style={{
+              borderRadius: "var(--radius-sm)",
+              objectFit: "cover",
+              marginBottom: "var(--space-lg)",
+            }}
+          />
           <h1
             style={{
               fontFamily: "var(--font-serif)",

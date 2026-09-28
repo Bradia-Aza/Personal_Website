@@ -56,6 +56,22 @@
 }
 
 /*
+ * Mobile token overrides — same design system, smaller viewport. Only the
+ * tokens that don't scale safely to narrow screens change here; component
+ * code stays untouched since every page already consumes these via
+ * var(--token). 640px is the standard phone/tablet cutoff (no prior
+ * ad-hoc breakpoint existed in the codebase to match).
+ */
+@media (max-width: 640px) {
+  :root {
+    --text-h1: 34px;
+    --shell-padding: 20px;
+    --space-3xl: 48px;
+    --space-4xl: 64px;
+  }
+}
+
+/*
  * "Night Reading" — the approved dark variant of Quiet Manuscript. Same
  * type scale, spacing, and structural tokens; only the color tokens change,
  * relightened from the same accent hue family for contrast on a dark,

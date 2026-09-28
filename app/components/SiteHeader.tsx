@@ -30,6 +30,7 @@ export default function SiteHeader() {
               fontSize: "var(--text-wordmark)",
               color: "var(--ink)",
               textDecoration: "none",
+              padding: "var(--space-xs) 0",
             }}
           >
             Home
@@ -51,7 +52,11 @@ export default function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                style={{ color: "var(--ink)", textDecoration: "none" }}
+                style={{
+                  color: "var(--ink)",
+                  textDecoration: "none",
+                  padding: "var(--space-xs) 0",
+                }}
               >
                 {item.label}
               </Link>

@@ -21,13 +21,22 @@ export default function SiteFooter() {
             color: "var(--ink-soft)",
           }}
         >
-          <a href={`mailto:${identity.email}`} style={{ color: "inherit" }}>
+          <a
+            href={`mailto:${identity.email}`}
+            style={{ color: "inherit", padding: "var(--space-xs) 0" }}
+          >
             {identity.email}
           </a>
-          <a href={identity.github} style={{ color: "inherit" }}>
+          <a
+            href={identity.github}
+            style={{ color: "inherit", padding: "var(--space-xs) 0" }}
+          >
             GitHub
           </a>
-          <a href={identity.linkedin} style={{ color: "inherit" }}>
+          <a
+            href={identity.linkedin}
+            style={{ color: "inherit", padding: "var(--space-xs) 0" }}
+          >
             LinkedIn
           </a>
           <span>{identity.location}</span>

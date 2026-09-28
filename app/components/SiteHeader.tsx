@@ -1,13 +1,12 @@
 import Link from "next/link";
 import Shell from "./Shell";
-import { getIdentity, getNav } from "@/app/lib/content";
+import { getNav } from "@/app/lib/content";
 
 // Top bar on every page: wordmark, nav (Research before Portfolio per
 // REPORT.md's menu-order recommendation), and a CV button per REPORT.md §1.4.
 // The CV file itself is a Phase 4 deliverable (owner supplies the PDF) — the
 // link points at the stable /cv.pdf URL now so the button doesn't move later.
 export default function SiteHeader() {
-  const identity = getIdentity();
   const nav = getNav();
 
   return (
@@ -32,7 +31,7 @@ export default function SiteHeader() {
               textDecoration: "none",
             }}
           >
-            {identity.name}
+            Home
           </Link>
 
           <nav

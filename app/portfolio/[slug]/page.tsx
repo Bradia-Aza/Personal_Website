@@ -188,55 +188,40 @@ export default async function ProjectPage({
               marginBottom: "var(--space-md)",
             }}
           >
-            Problem → solution → result
+            Write-up
           </p>
-          <ol style={{ listStyle: "none", margin: 0, padding: 0 }}>
-            {project.details.map((detail, i) => (
-              <li
+          {project.body.map((block, i) =>
+            block.type === "heading" ? (
+              <h3
                 key={i}
                 style={{
-                  borderTop: i === 0 ? "none" : "1px solid var(--line)",
-                  padding: `var(--space-md) 0`,
+                  fontFamily: "var(--font-sans)",
+                  fontWeight: 600,
+                  fontSize: "var(--text-body)",
+                  color: "var(--ink)",
+                  maxWidth: "68ch",
+                  marginTop: i === 0 ? 0 : "var(--space-lg)",
+                  marginBottom: 0,
                 }}
               >
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "var(--text-meta)",
-                    color: "var(--ink)",
-                    margin: 0,
-                    lineHeight: 1.55,
-                  }}
-                >
-                  <strong>Problem.</strong> {detail.problem}
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "var(--text-meta)",
-                    color: "var(--ink)",
-                    margin: 0,
-                    marginTop: "var(--space-xs)",
-                    lineHeight: 1.55,
-                  }}
-                >
-                  <strong>Solution.</strong> {detail.solution}
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "var(--text-meta)",
-                    color: "var(--ink-soft)",
-                    margin: 0,
-                    marginTop: "var(--space-xs)",
-                    lineHeight: 1.55,
-                  }}
-                >
-                  <strong>Result.</strong> {detail.result}
-                </p>
-              </li>
-            ))}
-          </ol>
+                {block.text}
+              </h3>
+            ) : (
+              <p
+                key={i}
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "var(--text-meta)",
+                  color: "var(--ink)",
+                  maxWidth: "68ch",
+                  marginTop: i === 0 ? 0 : "var(--space-md)",
+                  lineHeight: 1.55,
+                }}
+              >
+                {block.text}
+              </p>
+            )
+          )}
         </section>
       </Shell>
     </main>

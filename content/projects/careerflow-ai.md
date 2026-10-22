@@ -5,13 +5,14 @@ featured: true
 outcome: Cut tailoring a resume and cover letter for a new posting from roughly an hour of manual editing to a single command, with 73 offline tests covering the pipeline and no LLM calls in CI.
 stack:
   - Python
-  - LLM APIs (Anthropic, OpenAI, Google Gemini)
-  - Pydantic
-  - FastAPI
+  - LLM provider APIs (Anthropic, OpenAI, Google Gemini) behind one interface — native structured output, parsed completions, and a forced tool call for Claude
+  - Pydantic (schema validation and structured-output modeling per call)
+  - FastAPI (local API server)
   - ThreadPoolExecutor concurrency
-  - LaTeX
+  - YAML configuration (section mappings, length limits, prompts, per-step provider/model choice) with a web admin UI
+  - LaTeX generation
   - Chrome Extension (MV3)
-  - pytest
+  - pytest (73 offline tests against a fake provider, no network calls in CI)
 keywords:
   - LLM application development
   - prompt engineering
@@ -25,100 +26,22 @@ keywords:
   - configuration-driven design
 ---
 
-Built an AI system that tailors a LaTeX resume and cover letter to any job description end to end: a two-pass LLM extraction step mines job requirements, ranks experience by relevance, and regenerates every section under hard length constraints so the result always compiles to a fixed page budget. Solo project, designed and built end to end — architecture, LLM prompt engineering, LaTeX generation, local API server, and Chrome extension.
+CareerFlow AI tailors a LaTeX resume and cover letter to a job posting end to end: mine the job description, rank my experience against it, regenerate every section, compile to PDF. Solo project — architecture, prompt engineering, LaTeX generation, a local API server, and a Chrome extension, all built from scratch.
 
-## Problem
+A resume has a page budget, and generated content doesn't know that. A section that runs long silently breaks the layout, and the obvious fix — compile, check, ask the model to shorten, repeat — is slow, non-deterministic, and can still fail after several round trips. I built a constraint engine instead: every generated section is checked against configured character, line, and item limits, and if it's over, the pipeline retries once with a stricter prompt. If it's still over after that, it truncates deterministically — whole bullets first, then sentences, then words, never mid-word. Page length became a guarantee, with a bounded worst case of two LLM calls per section, instead of something I had to hope worked out.
 
-Overflowing content silently breaks a page budget, and compile-and-retry loops are slow, non-deterministic, and can still fail after several round trips.
+Getting the content right took a similar shape. A single LLM pass over a job description tends to return generic keywords — the core failure mode of naive tailoring, where the ranking and the bullets are working off requirements that were only surface-read. I replaced that with a two-pass Miner→Judge extraction: the miner over-extracts candidate requirements, the judge filters them for genuine relevance, and only the survivors get merged into the job description every downstream step reads from. Ranking, bullets, skills, and the cover letter all draw on the same vetted set of requirements, so the sections reinforce each other instead of quietly disagreeing.
 
-## Solution
+That fix exposed a sharper problem underneath it: structured LLM output can't be trusted to be internally consistent. The ranking step, in particular, would sometimes return section keys that were hallucinated, duplicated, or silently dropped — and a dropped key meant real experience missing from the output resume. I added a reconciliation step at the call boundary that checks model output against the known section keys, keeps the model's ordering, and re-appends anything it omitted. It's structurally impossible now for a model error to delete a section, while a genuinely good ranking still comes through untouched.
 
-I built a constraint engine that validates every generated section against configured character, line, and item limits, retries once with a stricter prompt, then deterministically truncates by dropping whole bullets, then sentences, then words — never cutting mid-word.
+Reconciliation only works if every provider's structured output looks the same by the time it reaches that boundary, and the providers don't agree with each other. Gemini rejects schemas with open-ended dict keys. Claude has no native structured-output mode at all. Left alone, that disagreement leaks provider-specific logic into generation code — so instead I defined one provider interface that takes a Pydantic schema, and implemented it per vendor: native structured output where it's supported, parsed completions where it isn't, and a forced tool call to get structure out of Claude. Where a provider couldn't express a schema as given, I reshaped it for that call. The payoff is that the model behind any step is now a config change, not a code change, and the entire test suite runs against a fake provider with no network calls at all.
 
-## Result
+### Making it fast enough to iterate on
 
-Page length became a guarantee rather than an outcome, with a bounded worst case of two LLM calls per section and no garbled text.
+None of this was fast if it ran the obvious way. A full run meant a dozen sequential LLM round trips, and waiting that long after every tweak discourages the kind of iterating this project actually needed. Looking at the dependency graph, ranking, bullets, profile, skills, and the cover letter all depend only on the enriched job description, and each writes to its own file — nothing about them requires running in order. So they run concurrently on a thread pool now, joining only before the final reorder and compile. That collapsed the slowest phase from the sum of all those calls to roughly the length of the longest one, with the cover letter's compile overlapping the resume's.
 
-## Problem
+Speed didn't fix the other kind of friction, which was that any routine tuning — a length limit, a prompt tweak, which model handles which step — meant editing Python. I moved all of that into YAML: section mappings, length constraints, prompt text, per-step provider and model choice. Then I built a small web admin UI on top of it, with drag-and-drop section ordering, that invalidates the cached pipeline on save. Tuning became a browser task that takes effect on the next run, with no restart and no code touched.
 
-A single LLM pass returns generic keywords — the core failure mode of naive resume tailoring.
+Underneath all of this, the thing I was most careful about was the resume itself. Layering that depends on convention erodes — someone eventually writes to the wrong path — and a bug that wrote to the source resume instead of a copy would corrupt it with no way back. So the architecture is strict one-way layering, pipeline → services/repositories → domain, with LaTeX escaping confined entirely to the write path, and every request works against a copy of the resume tree in its own workspace. Generation never touches the source, the source stays immutable across every run, and each layer is independently testable — which is most of how the project ended up with 73 offline tests.
 
-## Solution
-
-I designed a two-pass Miner→Judge extraction step that over-extracts candidates then filters them for genuine relevance, merging survivors into the job description every downstream service consumes.
-
-## Result
-
-Ranking, bullets, skills, and the cover letter are grounded in the same vetted requirements, so sections reinforce rather than contradict each other.
-
-## Problem
-
-Structured LLM output can't be trusted to be internally consistent — the ranking step returned section keys that were hallucinated, duplicated, or silently dropped, which would have deleted real experience from the resume.
-
-## Solution
-
-I added a reconciliation step validating model output against known section keys at the call boundary, preserving the model's ordering while re-appending anything omitted.
-
-## Result
-
-Structurally impossible for a model error to remove a section, while still honoring a sound ranking.
-
-## Problem
-
-Provider APIs disagree on structured output — Gemini rejects schemas with open-ended dict keys, Claude has no native structured-output mode — so provider choice was leaking into generation logic.
-
-## Solution
-
-I defined a single provider interface taking a Pydantic schema and implemented it per vendor (native structured output, parsed completions, and a forced tool call for Claude), reshaping schemas where a provider couldn't express them.
-
-## Result
-
-The model behind any step became a config change rather than a code change, and the whole test suite runs against a fake provider with no network calls.
-
-## Problem
-
-A dozen sequential LLM round trips made each run slow enough to discourage iterating.
-
-## Solution
-
-I identified that ranking, bullets, profile, skills, and the cover letter depend only on the enriched job description and each write a distinct file, then ran them concurrently on a thread pool, joining before the reorder and compile.
-
-## Result
-
-Collapsed the slowest phase from the sum of its LLM calls to roughly the longest one, with the cover-letter compile overlapping the resume's.
-
-## Problem
-
-Routine tuning required editing Python.
-
-## Solution
-
-I moved section mappings, length constraints, prompt text, and per-step provider/model choice into YAML, and built a web admin UI to edit all three files with drag-and-drop section ordering, invalidating the cached pipeline on save.
-
-## Result
-
-Prompt and layout tuning became a browser task taking effect on the next run, with no restart and no code edit.
-
-## Problem
-
-Layering by convention erodes, and a bug writing to the source resume instead of a copy would corrupt the originals irrecoverably.
-
-## Solution
-
-I enforced strict one-way layering (pipeline → services/repositories → domain) with LaTeX escaping confined to the write path, and copied the resume tree into a per-request workspace so generation never touches the source.
-
-## Result
-
-Source resume immutable across every run, each layer independently testable, covered by 73 offline tests.
-
-## Problem
-
-The pipeline still had to be driven from a terminal.
-
-## Solution
-
-I added a local FastAPI server around the same composition root the CLI uses, plus a Chrome extension capturing company, title, and description from the posting page.
-
-## Result
-
-Applying to a posting became filling three fields in a browser popup, sharing one code path with the CLI.
+The last piece was just usability: all of this only ran from a terminal. I added a local FastAPI server around the same composition root the CLI already used, so nothing about the pipeline needed to change to expose it, plus a Chrome extension that reads company, title, and description straight off a job posting page. Applying to a posting is now filling three fields in a browser popup, running through the exact same code path as the CLI.

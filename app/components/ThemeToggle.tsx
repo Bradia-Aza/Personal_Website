@@ -1,28 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
 
 // Manual light/dark switch for Night Reading (see globals.css). The initial
-// theme itself is set synchronously by the inline script in layout.tsx to
-// avoid a flash; this component reads that same DOM state synchronously via
-// the useState initializer (not an effect) so the button's own label doesn't
-// briefly show the wrong state on a dark-themed load, before React re-runs
-// this initializer during hydration.
-function readInitialTheme(): "light" | "dark" {
-  if (typeof document === "undefined") return "light";
+// theme is set on <html> by the inline script in layout.tsx before first
+// paint; the DOM attribute is the single source of truth, and this component
+// just mirrors it. useSyncExternalStore renders the server's "light" during
+// hydration and then re-syncs, so the client never disagrees with the server
+// HTML — a mismatch there makes React re-render the root and drop the
+// data-theme attribute, which left the button out of step with the page.
+type Theme = "light" | "dark";
+
+function readTheme(): Theme {
   return document.documentElement.getAttribute("data-theme") === "dark"
     ? "dark"
     : "light";
 }
 
+function subscribe(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+  return () => observer.disconnect();
+}
+
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">(readInitialTheme);
+  const theme = useSyncExternalStore<Theme>(subscribe, readTheme, () => "light");
 
   function toggle() {
-    const next = theme === "dark" ? "light" : "dark";
+    // Read the DOM, not React state, so a click always flips what's on screen.
+    const next = readTheme() === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
-    setTheme(next);
+    try {
+      localStorage.setItem("theme", next);
+    } catch {
+      // Storage can be blocked (private mode); the toggle still works for the session.
+    }
   }
 
   const isDark = theme === "dark";

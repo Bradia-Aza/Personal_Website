@@ -136,6 +136,25 @@ export default function ResearchPage() {
               >
                 <strong>Outcome.</strong> {entry.outcome}
               </p>
+              {entry.report && (
+                <p
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "var(--text-meta)",
+                    marginTop: "var(--space-md)",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "var(--space-md)",
+                  }}
+                >
+                  <a href={entry.report} target="_blank" rel="noopener">
+                    {entry.reportLabel || "Read the report (PDF)"}
+                  </a>
+                  <a href={entry.report} download>
+                    Download
+                  </a>
+                </p>
+              )}
               <div
                 style={{
                   display: "flex",

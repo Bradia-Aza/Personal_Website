@@ -245,6 +245,8 @@ export type ResearchEntry = {
   summary: string;
   outcome: string;
   stack: string[];
+  report: string;
+  reportLabel: string;
 };
 
 export function getResearchEntries(): ResearchEntry[] {
@@ -263,6 +265,8 @@ export function getResearchEntries(): ResearchEntry[] {
       summary: body,
       outcome: str(data, "outcome"),
       stack: strList(data, "stack"),
+      report: str(data, "report"),
+      reportLabel: str(data, "reportLabel"),
     };
   });
 

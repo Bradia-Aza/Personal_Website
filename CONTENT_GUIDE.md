@@ -52,8 +52,10 @@ without publishing it — files starting with `_` are skipped.
 
 Same pattern, one file per entry in `content/research/`, e.g.
 `content/research/ct-reconstruction.md`. Frontmatter: `title`, `role`,
-`dates`, `outcome`, `stack`. Body: the summary paragraph (no Problem/
-Solution/Result sections here — research entries are shorter).
+`dates`, `outcome`, `stack`, and optionally `report` (path to a PDF in
+`public/reports/`) with `reportLabel` (the link text). Body: the summary
+paragraph (no Problem/Solution/Result sections here — research entries are
+shorter).
 
 ## Notes / essays (Writing page)
 

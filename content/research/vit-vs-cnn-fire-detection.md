@@ -3,6 +3,8 @@ title: Comparative deep learning analysis — ViT vs. CNNs for outdoor fire dete
 role: AI Researcher — University of Isfahan
 dates: Sep 2022 – Jul 2023
 outcome: Established the transformer as the stronger detector at 95.7% accuracy with 13 false positives, against 30–46 for the CNN baselines, while identifying RegNetX as the better fit for aerial smoke. Diagnostic analysis on every false positive traced 35% of errors to firefighter and red-truck features in the images.
+report: /reports/fire-smoke-detection-technical-report.pdf
+reportLabel: Technical report (PDF, 19 pages)
 stack:
   - Python
   - PyTorch

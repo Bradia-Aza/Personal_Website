@@ -89,18 +89,47 @@ export default function ResearchPage() {
                 padding: `var(--space-lg) 0`,
               }}
             >
-              <p
+              <div
                 style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "var(--text-label)",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "var(--ink-soft)",
-                  margin: 0,
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "var(--space-sm)",
                 }}
               >
-                {entry.role} · {entry.dates}
-              </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "var(--text-label)",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "var(--ink-soft)",
+                    margin: 0,
+                  }}
+                >
+                  {entry.role} · {entry.dates}
+                </p>
+                {entry.report && (
+                  <a
+                    href={entry.report}
+                    target="_blank"
+                    rel="noopener"
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "var(--text-meta)",
+                      color: "var(--accent)",
+                      border: "1px solid var(--accent)",
+                      borderRadius: "var(--radius-sm)",
+                      padding: "var(--chip-padding)",
+                      textDecoration: "none",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {entry.reportLabel || "Read the report (PDF)"} ↗
+                  </a>
+                )}
+              </div>
               <h2
                 style={{
                   fontFamily: "var(--font-serif)",
@@ -136,25 +165,6 @@ export default function ResearchPage() {
               >
                 <strong>Outcome.</strong> {entry.outcome}
               </p>
-              {entry.report && (
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "var(--text-meta)",
-                    marginTop: "var(--space-md)",
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "var(--space-md)",
-                  }}
-                >
-                  <a href={entry.report} target="_blank" rel="noopener">
-                    {entry.reportLabel || "Read the report (PDF)"}
-                  </a>
-                  <a href={entry.report} download>
-                    Download
-                  </a>
-                </p>
-              )}
               <div
                 style={{
                   display: "flex",

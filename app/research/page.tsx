@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import Shell from "@/app/components/Shell";
 import OwnerPlaceholder from "@/app/components/OwnerPlaceholder";
@@ -139,7 +140,12 @@ export default function ResearchPage() {
                   marginTop: "var(--space-xs)",
                 }}
               >
-                {entry.title}
+                <Link
+                  href={`/research/${entry.slug}`}
+                  style={{ color: "var(--ink)", textDecoration: "none" }}
+                >
+                  {entry.title}
+                </Link>
               </h2>
               <p
                 style={{
@@ -165,6 +171,18 @@ export default function ResearchPage() {
               >
                 <strong>Outcome.</strong> {entry.outcome}
               </p>
+              <Link
+                href={`/research/${entry.slug}`}
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "var(--text-meta)",
+                  color: "var(--accent)",
+                  display: "inline-block",
+                  marginTop: "var(--space-sm)",
+                }}
+              >
+                Read the full write-up →
+              </Link>
               <div
                 style={{
                   display: "flex",

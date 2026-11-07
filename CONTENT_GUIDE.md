@@ -51,11 +51,18 @@ without publishing it — files starting with `_` are skipped.
 ## Research entries (Research page)
 
 Same pattern, one file per entry in `content/research/`, e.g.
-`content/research/ct-reconstruction.md`. Frontmatter: `title`, `role`,
-`dates`, `outcome`, `stack`, and optionally `report` (path to a PDF in
-`public/reports/`) with `reportLabel` (the link text). Body: the summary
-paragraph (no Problem/Solution/Result sections here — research entries are
-shorter).
+`content/research/ct-reconstruction.md`. The filename becomes the URL
+(`ct-reconstruction` → `/research/ct-reconstruction`). Frontmatter: `title`,
+`role`, `dates`, `outcome`, `stack`, and optionally `report` (path to a PDF in
+`public/reports/`) with `reportLabel` (the link text).
+
+Body: one summary paragraph, shown on both the Research page and the full
+write-up, followed by the write-up itself. Start each section with
+`## Your heading` and separate paragraphs with a blank line. You choose the
+headings; research entries don't use the Problem/Solution/Result format.
+
+To add a new entry, also add its filename to the `order` list in
+`getResearchEntries()` in `app/lib/content.ts`, which sets the display order.
 
 ## Notes / essays (Writing page)
 

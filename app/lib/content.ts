@@ -98,6 +98,24 @@ function parseProblemSolutionResult(body: string) {
   return { lede, details };
 }
 
+// Splits a research body into its lede and free-form "## Heading" sections,
+// each holding one or more blank-line-separated paragraphs.
+function parseProseSections(body: string) {
+  const [lede, ...headed] = `\n${body}`.split(/\r?\n##\s+/);
+
+  const sections = headed.map((section) => {
+    const [heading, ...rest] = section.split(/\r?\n/);
+    const paragraphs = rest
+      .join("\n")
+      .split(/(?:\r?\n){2,}/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+    return { heading: heading.trim(), paragraphs };
+  });
+
+  return { lede: lede.trim(), sections };
+}
+
 export type Identity = {
   name: string;
   location: string;
@@ -247,6 +265,7 @@ export type ResearchEntry = {
   stack: string[];
   report: string;
   reportLabel: string;
+  sections: { heading: string; paragraphs: string[] }[];
 };
 
 export function getResearchEntries(): ResearchEntry[] {
@@ -256,22 +275,28 @@ export function getResearchEntries(): ResearchEntry[] {
   const entries = files.map((file) => {
     const slug = file.replace(/\.md$/, "");
     const { data, body } = readMarkdownFile(path.join(dir, file));
+    const { lede, sections } = parseProseSections(body);
 
     return {
       slug,
       title: str(data, "title"),
       role: str(data, "role"),
       dates: str(data, "dates"),
-      summary: body,
+      summary: lede,
       outcome: str(data, "outcome"),
       stack: strList(data, "stack"),
       report: str(data, "report"),
       reportLabel: str(data, "reportLabel"),
+      sections,
     };
   });
 
   const order = ["vit-vs-cnn-fire-detection", "ct-reconstruction"];
   return entries.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug));
+}
+
+export function getResearchEntry(slug: string): ResearchEntry | undefined {
+  return getResearchEntries().find((entry) => entry.slug === slug);
 }
 
 export type Note = {

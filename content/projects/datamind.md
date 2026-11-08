@@ -1,6 +1,6 @@
 ---
 title: DataMind — Conversational BI platform
-dates: 2025
+dates: 2026
 featured: true
 outcome: Runs end to end against PostgreSQL, MySQL, SQL Server, and Oracle, with the SQL guard's hostile-input corpus enforced as a CI hard gate on every merge.
 stack:
@@ -26,8 +26,11 @@ keywords:
   - REST API
   - full-stack development
 ---
+Most BI tools make it easy to connect data, build dashboards, and ask questions about it. But when an LLM is introduced into the workflow, a different problem appears: how much access should the model actually have to the underlying data?
 
-Built a modular-monolith platform letting users ask questions in plain language over relational databases and get back an auditable answer, table, and chart, with an AST-based SQL guard, a configurable disclosure policy, and a semantic layer securing every model-generated query. Solo build spanning a FastAPI backend, React/TypeScript front end, and a multi-database execution layer.
+DataMind is a conversational BI platform built around that question. The core idea is simple: the LLM should only have as much access to the database as the user allows, and even with full access, it can only execute harmless, read-only queries.
+
+It is a modular-monolith platform letting users ask questions in plain language over relational databases and get back an auditable answer, table, and chart, with an AST-based SQL guard, a configurable disclosure policy, and a semantic layer securing every model-generated query. Solo build spanning a FastAPI backend, React/TypeScript front end, and a multi-database execution layer.
 
 ## Problem
 

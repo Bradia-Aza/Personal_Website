@@ -1,5 +1,5 @@
 ---
-title: "Building a Gateway for LLMs: More Than Just a Proxy"
+title: Building a Gateway for LLMs: More Than Just a Proxy
 dates: November 2026
 published: true
 ---

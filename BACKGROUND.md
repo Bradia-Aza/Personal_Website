@@ -154,7 +154,7 @@ established mass-production feasibility for the product line.
 
 ## 5. Projects
 
-### 5.1 CareerFlow AI — LLM resume-tailoring pipeline (Dec 2025 – Present)
+### 5.1 CareerFlow AI — LLM resume-tailoring pipeline (2025)
 
 Built an AI system that tailors a LaTeX resume and cover letter to any job
 description end to end: a two-pass LLM extraction step mines job requirements,
@@ -184,7 +184,7 @@ tests covering the pipeline and no LLM calls in CI.
 
 ---
 
-### 5.2 DataMind — Conversational BI platform (2025)
+### 5.2 DataMind — Conversational BI platform (2026)
 
 Built a modular-monolith platform letting users ask questions in plain language
 over relational databases and get back an auditable answer, table, and chart,
@@ -340,9 +340,42 @@ playback.
 
 *Keywords:* ROS 2, robotics, robotics middleware, computer vision, OpenCV, gesture recognition, hand tracking, real-time systems, concurrency, publisher-subscriber, service architecture, text-to-speech, teleoperation, sensor fusion
 
+### 5.8 AITOS — Context-optimization runtime for AI coding agents (2026)
+
+Co-built a local runtime that sits between AI coding agents (Claude Code, Codex CLI, and their
+VS Code extensions) and LLM providers. It intercepts each provider-bound request, removes redundant
+context such as repeated tool output and verbose prompts, and records every exchange so the saving
+can be audited. I was one of three engineers on this proprietary, pre-commercial product. I owned
+the LLM gateway, the provider-side interception layer, and contributed to the optimization pipeline.
+
+*Stack:* Python, FastAPI, asyncio, LiteLLM, SSE streaming, Anthropic Messages API, OpenAI Chat Completions & Responses APIs, SQLite, pytest, GitHub Actions
+
+**Headline outcome:** Claude Code and Codex sessions from any terminal or IDE on the machine go
+through the gateway with no change to the developer's workflow. Requests are optimized before they
+reach the provider, and the gateway is covered by ~690 offline tests that need no provider
+credentials.
+
+**What I actually did (problem → solution → result):**
+
+1. **Agents speak different wire formats, and provider logic leaks everywhere.** I designed the gateway around a provider-neutral canonical request/response/stream model. Adapters translate Anthropic and OpenAI formats at the edges, and a single module calls providers through LiteLLM, with cross-routing so either input format can reach either provider. Architecture rules (LiteLLM confined to one module, no provider branching outside routing, capture isolated from the coordinator) are enforced as tests. Result: the optimizer works on one format, and adding a provider or input format touches only the edges.
+2. **An optimizer in the request path must never break the agent.** I built the review hand-off with the runtime coordinator (allow, replace, deny), validating only the shape of each answer and failing open on timeouts, connection errors, or malformed replies, with the reason recorded. Result: optimization runs on every request in modify mode, yet a coordinator outage degrades to plain passthrough instead of a failed session.
+3. **Savings claims are meaningless without evidence.** I built a capture pipeline that writes one record per request: the request as it arrived, the request as it was sent, telemetry, and redacted raw traffic at four hops. Records go through a bounded off-path queue so the response never waits on disk, and each record gets exactly one outcome (completed, denied, provider error, client disconnect, broken stream, coordinator unavailable). Result: every optimization can be measured from before and after payloads, and translation loss can be measured hop by hop.
+4. **Streaming and credentials are where proxies quietly go wrong.** I implemented event-by-event SSE forwarding with no buffering, normalized provider errors into a closed set of caller-format errors with raw provider text kept out of responses, and propagated client cancellation upstream so the provider stops generating billable tokens. The caller's own credential (OAuth login or API key) is passed through so their billing identity is kept, but it never reaches the coordinator, capture files, or error messages. Result: the proxy is transparent to the agent and keeps credentials and partial streams safe.
+5. **Codex's Responses API can't be rebuilt from a neutral model**, because it carries reasoning items, item IDs, and encrypted content. I added a dedicated passthrough route to the ChatGPT backend with a one-way canonical reader. Optimizer changes are applied as text-only patches on Codex's original body, and anything that can't be patched safely falls back to the original bytes. Result: Codex traffic is optimized too, and because the patches are deterministic, the same history produces the same bytes on every turn and the provider's prompt cache keeps working.
+6. **Wrapping one terminal session misses most real usage.** I built machine-wide attach and detach for Claude Code (`settings.json`) and Codex (`config.toml`): the original files are restored on stop, and Claude sessions still attached after a detach are rejected with a clear error instead of retrying silently. I also correlated traffic by session and client (CLI, VS Code, SDK) from each agent's metadata, so Codex title and IDE-context requests are grouped with their thread. Result: one `aitos serve` captures every agent session on the machine, grouped into coherent per-session timelines for the dashboard.
+
+*Keywords:* LLM gateway, API proxy, context optimization, prompt compression, token cost reduction, AI coding agents, agentic AI, LLM orchestration, LLM observability, streaming (SSE), FastAPI, LiteLLM, Anthropic API, OpenAI API, fail-open design, hexagonal architecture, contract testing
+
 ---
 
-## 6. Certifications
+## 6. Awards & certifications
+
+### Awards
+
+- **First Place — Sharif DataDays 2022** (Aug 2023)
+- **Third Place — Torob Data Challenge 2023** (May 2023)
+
+### Certifications
 
 - **Ultimate AWS Certified Solutions Architect Associate** (Aug 2026) — foundational expertise designing scalable, highly available, and secure applications on AWS.
 - **Claude Code: A Highly Agentic Coding Assistant** (Mar 2026) — [certificate](https://learn.deeplearning.ai/accomplishments/670d96d6-a0bd-4180-97e5-a916f8bdfdab) — built and used agentic coding workflows for autonomous problem solving and code generation.

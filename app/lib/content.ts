@@ -240,6 +240,7 @@ export function getProjects(): Project[] {
   // Fixed display order (directory reads aren't guaranteed alphabetical
   // across platforms) — featured-first, matching REPORT.md's ordering.
   const order = [
+    "aitos",
     "datamind",
     "careerflow-ai",
     "ottawa-rental-market-etl",

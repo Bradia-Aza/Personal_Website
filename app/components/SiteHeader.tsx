@@ -5,8 +5,8 @@ import { getNav } from "@/app/lib/content";
 
 // Top bar on every page: wordmark, nav (Research before Portfolio per
 // REPORT.md's menu-order recommendation), and a CV button per REPORT.md §1.4.
-// The CV file itself is a Phase 4 deliverable (owner supplies the PDF) — the
-// link points at the stable /cv.pdf URL now so the button doesn't move later.
+// The button opens public/cv.pdf (served at /cv.pdf) in a new tab. To update
+// the CV, replace that file — keep the filename so the link doesn't change.
 export default function SiteHeader() {
   const nav = getNav();
 
@@ -63,6 +63,8 @@ export default function SiteHeader() {
             ))}
             <a
               href="/cv.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 color: "var(--accent)",
                 textDecoration: "none",
